@@ -1,7 +1,4 @@
 (() => {
-  const buttons = document.querySelectorAll(".music-toggle");
-  if (!buttons.length) return;
-
   const music = window.festivalMusic || new Audio("Kamalapthakula.mp3");
   window.festivalMusic = music;
   music.loop = true;
@@ -26,18 +23,7 @@
     }
   };
 
-  const updateButtons = (playing) => {
-    buttons.forEach((button) => {
-      button.setAttribute("aria-pressed", String(playing));
-      button.setAttribute("aria-label", playing ? "Stop festival music" : "Play festival music");
-      button.title = playing ? "Stop festival music" : "Play festival music";
-      button.querySelector("span").textContent = playing ? "■" : "▶";
-    });
-  };
-
-  music.addEventListener("play", () => updateButtons(true));
   music.addEventListener("pause", () => {
-    updateButtons(false);
     saveMusicState();
   });
   music.addEventListener("timeupdate", saveMusicState);
@@ -46,21 +32,6 @@
     console.error("Could not load the festival music:", music.error);
   });
   window.addEventListener("pagehide", saveMusicState);
-
-  buttons.forEach((button) => {
-    button.addEventListener("click", async () => {
-      if (!music.paused) {
-        music.pause();
-        return;
-      }
-
-      try {
-        await music.play();
-      } catch (error) {
-        console.error("Could not start the festival music:", error);
-      }
-    });
-  });
 
   const resumeMusic = () => {
     if (savedMusicState?.currentTime > 0) {
@@ -71,18 +42,35 @@
       else music.addEventListener("loadedmetadata", restorePosition, { once: true });
     }
 
-    if (savedMusicState && !savedMusicState.playing) {
-      updateButtons(false);
-      return Promise.resolve();
-    }
-
     return music.play();
   };
 
-  resumeMusic().catch((error) => {
+  let autoplayPending = true;
+  const retryAutoplay = () => {
+    if (!autoplayPending) return;
+    music.play().then(() => {
+      autoplayPending = false;
+      ["pointerdown", "keydown", "touchstart"].forEach((eventName) => {
+        document.removeEventListener(eventName, retryAutoplay);
+      });
+    }).catch((error) => {
+      if (error.name !== "NotAllowedError") {
+        console.error("Could not start the festival music:", error);
+      }
+    });
+  };
+
+  resumeMusic().then(() => {
+    autoplayPending = music.paused;
+  }).catch((error) => {
+    autoplayPending = true;
     if (error.name !== "NotAllowedError") {
       console.error("Could not start the festival music:", error);
     }
+  });
+
+  ["pointerdown", "keydown", "touchstart"].forEach((eventName) => {
+    document.addEventListener(eventName, retryAutoplay);
   });
 
   const loadPage = async (url, addHistory = true) => {
@@ -104,9 +92,9 @@
         if (currentNav) {
           currentNav.replaceChildren(...nextNav.cloneNode(true).childNodes);
         } else {
-          const brand = document.querySelector(".site-header .brand");
-          if (!brand) throw new Error("The site header is missing its brand link.");
-          brand.after(nextNav.cloneNode(true));
+          const header = document.querySelector(".site-header");
+          if (!header) throw new Error("The site header is missing.");
+          header.append(nextNav.cloneNode(true));
         }
       } else {
         currentNav?.remove();
