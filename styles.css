@@ -79,7 +79,18 @@ button { font: inherit; }
   position: absolute; z-index: -1; top: 16%; left: 50%; width: 18rem; height: 18rem;
   border-radius: 50%; background: rgba(231, 145, 66, .16); filter: blur(70px);
 }
-.hero-copy { max-width: 850px; animation: rise-in .9s both; }
+.hero-copy { position: relative; z-index: 1; max-width: 850px; animation: rise-in .9s both; }
+.hero-deity-logo {
+  display: block; width: clamp(110px, 13vw, 170px); height: auto;
+  margin: .45rem auto .7rem; filter: drop-shadow(0 10px 24px rgba(0, 0, 0, .35));
+}
+.hero-side-emblem {
+  position: absolute; z-index: 0; top: 39%; width: clamp(72px, 10vw, 132px);
+  height: auto; opacity: .58; pointer-events: none; transform: translateY(-50%);
+  filter: drop-shadow(0 0 12px rgba(231, 189, 119, .18));
+}
+.hero-side-emblem-left { left: clamp(1rem, 5vw, 5rem); }
+.hero-side-emblem-right { right: clamp(1rem, 5vw, 5rem); }
 .eyebrow, .section-kicker {
   margin: 0; color: var(--gold); font-size: .85rem; letter-spacing: .07em;
 }
@@ -135,11 +146,26 @@ button { font: inherit; }
 .home-note p { margin: 0; font-size: .88rem; }
 .note-symbol { font-size: 1.5rem; }
 
-.page-heading { padding: 4.5rem 1rem 2rem; text-align: center; background: radial-gradient(ellipse at 50% 0, rgba(48, 132, 148, .2), transparent 32rem); }
-.page-heading h1 { margin: .45rem 0; font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1.45; }
-.page-heading h1 span { color: var(--gold-bright); }
-.page-heading > p:last-child { margin: .25rem 0; color: var(--muted); }
-.date-pill { display: inline-block; margin-left: .45rem; padding: .12rem .65rem; border: 1px solid rgba(231, 189, 119, .38); border-radius: 2rem; color: var(--gold-bright); font-size: .8rem; }
+.page-heading {
+  position: relative; isolation: isolate; overflow: hidden;
+  display: flex; min-height: 300px; flex-direction: column; justify-content: center;
+  padding: 4rem 1rem 2.5rem; text-align: center;
+  background:
+    linear-gradient(180deg, rgba(4, 17, 22, .45), rgba(4, 17, 22, .82)),
+    url("temple-header.webp") center 43% / cover no-repeat;
+}
+.page-heading h1 {
+  margin: .45rem 0; color: #fff5dd; font-size: clamp(2rem, 5vw, 3.4rem);
+  line-height: 1.45; text-shadow: 0 2px 12px rgba(0, 0, 0, .8);
+}
+.page-heading h1 span { color: #ffd98c; }
+.page-heading > .eyebrow { color: #ffe0a2; text-shadow: 0 1px 8px rgba(0, 0, 0, .9); }
+.page-heading > p:last-child { margin: .25rem 0; color: #fff1d1; text-shadow: 0 1px 8px rgba(0, 0, 0, .95); }
+.date-pill {
+  display: inline-block; margin-left: .45rem; padding: .12rem .65rem;
+  border: 1px solid rgba(255, 218, 145, .72); border-radius: 2rem;
+  background: rgba(5, 20, 25, .6); color: #ffe0a2; font-size: .8rem;
+}
 .schedule-wrap {
   width: min(760px, calc(100% - 2rem)); margin: 1.3rem auto 2.5rem; padding: 2rem clamp(1rem, 5vw, 3.5rem) 1.4rem;
   border: 1px solid rgba(231, 189, 119, .3); border-radius: 1.2rem;
@@ -209,6 +235,10 @@ button { font: inherit; }
   .nav-link { display: inline-flex; flex: 0 0 auto; min-height: 44px; align-items: center; padding: .38rem .55rem; font-size: .74rem; scroll-snap-align: start; }
   .hero { min-height: min(680px, 78svh); padding: 3.2rem .9rem 4rem; }
   .hero-copy { width: 100%; }
+  .hero-deity-logo { width: clamp(84px, 23vw, 112px); margin: .2rem auto .45rem; }
+  .hero-side-emblem { top: 27%; width: clamp(34px, 9vw, 44px); opacity: .34; }
+  .hero-side-emblem-left { left: .55rem; }
+  .hero-side-emblem-right { right: .55rem; }
   .eyebrow { font-size: .76rem; }
   .invocation { margin-top: 1.2rem; font-size: 1rem; }
   .hero h1 { font-size: clamp(2rem, 9.5vw, 3.2rem); line-height: 1.42; }
@@ -229,7 +259,11 @@ button { font: inherit; }
   .day-card p { min-height: 2.8rem; font-size: .75rem; }
   .card-action { font-size: .76rem; }
   .home-note { align-items: flex-start; margin-bottom: 2.8rem; padding: .9rem; text-align: left; }
-  .page-heading { padding: 2.7rem .8rem 1.3rem; }
+  .page-heading {
+    min-height: clamp(280px, 72vw, 400px); padding: 3rem .8rem 1.5rem;
+    background-color: #061b24; background-position: center, center;
+    background-size: auto, contain;
+  }
   .page-heading .eyebrow { font-size: .76rem; }
   .page-heading h1 { font-size: clamp(1.7rem, 7.7vw, 2rem); line-height: 1.5; }
   .page-heading > p:last-child { font-size: .88rem; }
@@ -250,6 +284,16 @@ button { font: inherit; }
   .site-footer { padding: 1.15rem .75rem; }
 }
 @media (max-width: 420px) {
+  .hero { padding-inline: .75rem; }
+  .hero-copy { max-width: 100%; }
+  .hero-deity-logo { width: clamp(78px, 22vw, 94px); }
+  .hero-side-emblem { top: 25%; width: 34px; opacity: .3; }
+  .hero-side-emblem-left { left: .4rem; }
+  .hero-side-emblem-right { right: .4rem; }
+  .hero h1 { font-size: clamp(1.8rem, 8.7vw, 2.25rem); line-height: 1.4; }
+  .hero h1 span { font-size: .7em; }
+  .invocation { font-size: .92rem; }
+  .eyebrow { font-size: .7rem; }
   .day-grid { grid-template-columns: 1fr; }
   .day-card, .day-card:nth-last-child(-n+2), .day-card:first-child {
     grid-column: auto; display: grid; grid-template-columns: minmax(0, 1fr) auto;
@@ -267,7 +311,9 @@ button { font: inherit; }
 @media (max-width: 360px) {
   .brand strong { font-size: .74rem; }
   .nav-link { padding-inline: .45rem; font-size: .69rem; }
-  .hero h1 { font-size: 1.9rem; }
+  .hero-deity-logo { width: 76px; }
+  .hero-side-emblem { width: 29px; }
+  .hero h1 { font-size: 1.75rem; }
   .schedule-wrap { padding-inline: .65rem; }
   .timeline li { grid-template-columns: 4.1rem minmax(0, 1fr); font-size: .76rem; }
 }
