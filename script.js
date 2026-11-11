@@ -2,9 +2,29 @@
   const buttons = document.querySelectorAll(".music-toggle");
   if (!buttons.length) return;
 
-  const music = new Audio("Kamalapthakula.mp3");
+  const music = window.festivalMusic || new Audio("Kamalapthakula.mp3");
+  window.festivalMusic = music;
   music.loop = true;
   music.preload = "auto";
+  const musicStateKey = "festival-music-state";
+  let savedMusicState;
+
+  try {
+    savedMusicState = JSON.parse(sessionStorage.getItem(musicStateKey) || "null");
+  } catch (error) {
+    console.error("Could not read saved festival music state:", error);
+  }
+
+  const saveMusicState = () => {
+    try {
+      sessionStorage.setItem(musicStateKey, JSON.stringify({
+        currentTime: music.currentTime,
+        playing: !music.paused,
+      }));
+    } catch (error) {
+      console.error("Could not save festival music state:", error);
+    }
+  };
 
   const updateButtons = (playing) => {
     buttons.forEach((button) => {
@@ -16,11 +36,16 @@
   };
 
   music.addEventListener("play", () => updateButtons(true));
-  music.addEventListener("pause", () => updateButtons(false));
+  music.addEventListener("pause", () => {
+    updateButtons(false);
+    saveMusicState();
+  });
+  music.addEventListener("timeupdate", saveMusicState);
 
   music.addEventListener("error", () => {
     console.error("Could not load the festival music:", music.error);
   });
+  window.addEventListener("pagehide", saveMusicState);
 
   buttons.forEach((button) => {
     button.addEventListener("click", async () => {
@@ -37,7 +62,24 @@
     });
   });
 
-  music.play().catch((error) => {
+  const resumeMusic = () => {
+    if (savedMusicState?.currentTime > 0) {
+      const restorePosition = () => {
+        music.currentTime = savedMusicState.currentTime;
+      };
+      if (music.readyState >= 1) restorePosition();
+      else music.addEventListener("loadedmetadata", restorePosition, { once: true });
+    }
+
+    if (savedMusicState && !savedMusicState.playing) {
+      updateButtons(false);
+      return Promise.resolve();
+    }
+
+    return music.play();
+  };
+
+  resumeMusic().catch((error) => {
     if (error.name !== "NotAllowedError") {
       console.error("Could not start the festival music:", error);
     }
@@ -53,12 +95,22 @@
       const currentMain = document.querySelector("main#main");
       const nextNav = nextDocument.querySelector(".day-nav");
       const currentNav = document.querySelector(".day-nav");
-      if (!nextMain || !currentMain || !nextNav || !currentNav) {
-        throw new Error("The requested page is missing shared navigation content.");
+      if (!nextMain || !currentMain) {
+        throw new Error("The requested page is missing its main content.");
       }
 
       currentMain.replaceChildren(...nextMain.cloneNode(true).childNodes);
-      currentNav.replaceChildren(...nextNav.cloneNode(true).childNodes);
+      if (nextNav) {
+        if (currentNav) {
+          currentNav.replaceChildren(...nextNav.cloneNode(true).childNodes);
+        } else {
+          const brand = document.querySelector(".site-header .brand");
+          if (!brand) throw new Error("The site header is missing its brand link.");
+          brand.after(nextNav.cloneNode(true));
+        }
+      } else {
+        currentNav?.remove();
+      }
       document.title = nextDocument.title;
 
       const description = nextDocument.querySelector('meta[name="description"]')?.content;

@@ -176,8 +176,9 @@ button { font: inherit; }
 .placeholder-card p { margin: .45rem auto; color: var(--muted); }
 .placeholder-card .edit-hint { margin-top: 1.2rem; font-size: .8rem; }
 .edit-hint code { color: var(--gold); font-size: .78rem; }
-.page-pagination { display: flex; justify-content: space-between; gap: 1rem; width: min(760px, calc(100% - 2rem)); margin: 0 auto 4rem; }
+.page-pagination { display: flex; justify-content: space-between; align-items: center; gap: 1rem; width: min(760px, calc(100% - 2rem)); margin: 0 auto 4rem; }
 .page-pagination a { color: var(--gold-bright); font-size: .9rem; text-decoration: none; }
+.page-home-link { margin-right: auto; }
 .page-pagination a:hover { text-decoration: underline; }
 .site-footer { display: flex; justify-content: center; align-items: center; gap: .85rem; padding: 1.5rem 1rem; border-top: 1px solid rgba(231, 189, 119, .17); color: var(--muted); text-align: center; }
 .site-footer p { margin: 0; font-size: .9rem; }
