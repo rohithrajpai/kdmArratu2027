@@ -51,7 +51,9 @@ button { font: inherit; }
 }
 .nav-link:hover, .nav-link[aria-current="page"] { color: var(--night); background: var(--gold); }
 .music-toggle {
-  display: grid; flex: 0 0 auto; place-items: center; width: 42px; height: 42px;
+  appearance: none; display: grid; flex: 0 0 42px; place-items: center;
+  width: 42px; min-width: 42px; max-width: 42px;
+  height: 42px; min-height: 42px; max-height: 42px; padding: 0;
   border: 1px solid rgba(231, 189, 119, .55); border-radius: 50%;
   background: rgba(231, 189, 119, .08); color: var(--gold-bright);
   font-size: .9rem; cursor: pointer; transition: background .2s, transform .2s, color .2s;
@@ -196,15 +198,26 @@ button { font: inherit; }
 }
 @media (max-width: 600px) {
   .site-header {
-    display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: .6rem;
+    display: grid; grid-template-columns: minmax(0, 1fr) 42px; gap: .6rem;
     padding: .7rem .85rem;
   }
   .brand { min-width: 0; gap: .4rem; }
   .brand-mark { flex: 0 0 auto; font-size: 1.4rem; }
   .brand strong { font-size: .8rem; }
   .brand small { font-size: .66rem; }
-  .day-nav { grid-column: 1 / -1; order: initial; flex: initial; width: 100%; justify-content: flex-start; gap: .2rem; padding: .1rem 0 .2rem; overflow: visible; }
-  .nav-link { display: inline-flex; min-height: 44px; align-items: center; padding: .38rem .55rem; font-size: .74rem; }
+  .day-nav {
+    display: flex; grid-column: 1 / -1; order: initial; flex: initial; width: 100%;
+    min-width: 0; justify-content: flex-start; flex-wrap: nowrap; gap: .2rem;
+    padding: .1rem 0 .35rem; overflow-x: auto; overflow-y: hidden;
+    overscroll-behavior-x: contain; scroll-snap-type: x proximity;
+    scrollbar-width: thin; scrollbar-color: var(--gold) rgba(231, 189, 119, .12);
+    -webkit-overflow-scrolling: touch;
+  }
+  .day-nav::-webkit-scrollbar { display: block; height: 5px; }
+  .day-nav::-webkit-scrollbar-track { background: rgba(231, 189, 119, .12); border-radius: 5px; }
+  .day-nav::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 5px; }
+  .music-toggle { grid-column: 2; justify-self: end; }
+  .nav-link { display: inline-flex; flex: 0 0 auto; min-height: 44px; align-items: center; padding: .38rem .55rem; font-size: .74rem; scroll-snap-align: start; }
   .hero { min-height: min(680px, 78svh); padding: 3.2rem .9rem 4rem; }
   .hero-copy { width: 100%; }
   .eyebrow { font-size: .76rem; }
