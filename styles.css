@@ -276,12 +276,12 @@ button { font: inherit; }
   .card-action { font-size: .76rem; }
   .home-note { align-items: flex-start; margin-bottom: 2.8rem; padding: .9rem; text-align: left; }
   .page-heading {
-    min-height: clamp(340px, 92vw, 440px); padding: 3rem 1rem;
+    min-height: clamp(220px, 62vw, 290px); padding: 1.5rem 1rem;
     background-color: #061b24; background-position: center, center 43%;
     background-size: auto, cover;
   }
   .page-heading .eyebrow { font-size: .76rem; }
-  .page-heading h1 { max-width: 20ch; margin-block: .55rem; font-size: clamp(1.8rem, 8.5vw, 2.7rem); line-height: 1.28; }
+  .page-heading h1 { max-width: 20ch; margin-block: .45rem; font-size: clamp(1.45rem, 6.2vw, 2rem); line-height: 1.2; }
   .page-heading > p:last-child {
     display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
     gap: .3rem .55rem; font-size: .88rem;
