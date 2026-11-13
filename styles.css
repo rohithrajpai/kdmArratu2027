@@ -148,14 +148,14 @@ button { font: inherit; }
 
 .page-heading {
   position: relative; isolation: isolate; overflow: hidden;
-  display: flex; min-height: 300px; flex-direction: column; justify-content: center;
+  display: flex; min-height: 300px; flex-direction: column; align-items: center; justify-content: center;
   padding: 4rem 1rem 2.5rem; text-align: center;
   background:
     linear-gradient(180deg, rgba(4, 17, 22, .45), rgba(4, 17, 22, .82)),
     url("temple-header.webp") center 43% / cover no-repeat;
 }
 .page-heading h1 {
-  margin: .45rem 0; color: #fff5dd; font-size: clamp(2rem, 5vw, 3.4rem);
+  width: 100%; margin: .45rem 0; color: #fff5dd; font-size: clamp(2rem, 5vw, 3.4rem);
   line-height: 1.45; text-shadow: 0 2px 12px rgba(0, 0, 0, .8);
 }
 .page-heading h1 span { color: #ffd98c; }
