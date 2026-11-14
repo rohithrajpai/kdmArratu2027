@@ -17,6 +17,17 @@
 
       const openInvitation = () => {
         if (invitation.classList.contains("is-opening")) return;
+        music.play().then(() => {
+          autoplayPending = false;
+          ["pointerdown", "keydown", "touchstart"].forEach((eventName) => {
+            document.removeEventListener(eventName, retryAutoplay);
+          });
+        }).catch((error) => {
+          autoplayPending = true;
+          if (error.name !== "NotAllowedError") {
+            console.error("Could not start the festival music:", error);
+          }
+        });
         invitation.classList.add("is-opening");
         invitation.setAttribute("aria-hidden", "true");
         try {
