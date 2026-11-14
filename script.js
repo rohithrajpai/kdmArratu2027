@@ -1,4 +1,52 @@
 (() => {
+  const invitation = document.querySelector("#festival-invitation");
+  if (invitation) {
+    let alreadyOpened = false;
+    try {
+      alreadyOpened = sessionStorage.getItem("festival-invitation-opened") === "true";
+    } catch (error) {
+      console.error("Could not read invitation state:", error);
+    }
+
+    if (!alreadyOpened) {
+      invitation.hidden = false;
+      document.body.classList.add("invitation-active");
+      document.querySelectorAll("body > :not(#festival-invitation)").forEach((element) => {
+        element.inert = true;
+      });
+
+      const openInvitation = () => {
+        if (invitation.classList.contains("is-opening")) return;
+        invitation.classList.add("is-opening");
+        invitation.setAttribute("aria-hidden", "true");
+        try {
+          sessionStorage.setItem("festival-invitation-opened", "true");
+        } catch (error) {
+          console.error("Could not save invitation state:", error);
+        }
+
+        const finishOpening = () => {
+          invitation.hidden = true;
+          document.body.classList.remove("invitation-active");
+          document.querySelectorAll("body > :not(#festival-invitation)").forEach((element) => {
+            element.inert = false;
+          });
+          document.querySelector("#main a")?.focus({ preventScroll: true });
+        };
+        const delay = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 50 : 1300;
+        window.setTimeout(finishOpening, delay);
+      };
+
+      invitation.querySelector(".invitation-open").addEventListener("click", openInvitation);
+      invitation.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") openInvitation();
+      });
+      invitation.querySelector(".invitation-open").focus();
+    } else {
+      invitation.remove();
+    }
+  }
+
   const music = window.festivalMusic || new Audio("Kamalapthakula.mp3");
   window.festivalMusic = music;
   music.loop = true;
