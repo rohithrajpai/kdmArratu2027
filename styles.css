@@ -274,7 +274,7 @@ body.invitation-active { overflow: hidden; }
   border: 1px solid rgba(231, 189, 119, .28); border-radius: .85rem;
   background:
     linear-gradient(rgba(4, 20, 27, .78), rgba(4, 20, 27, .84)),
-    url("pallivetta.JPG") center 38% / cover no-repeat;
+    url("pallivetta.jpg") center 38% / cover no-repeat;
   box-shadow: inset 0 0 28px rgba(0, 0, 0, .14);
 }
 .schedule-group.day4-1-photo {
